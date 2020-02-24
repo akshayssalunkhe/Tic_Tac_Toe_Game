@@ -9,6 +9,7 @@ declare -a gameBoard
 #CONSTANTS
 NUMBER_OF_ROWS=3;
 NUMBER_OF_COLUMNS=3;
+ZERO=0;
 
 #VARIABLES
 rows=0;
@@ -43,3 +44,16 @@ function assignSymbol() {
 
 #CALLING FUNCTION TO ASSIGN SYMBOL TO USER
 assignSymbol
+
+#FUNCTION TO DECIDE WHO PLAYS FIRST
+function whoPlaysFirst() {
+	if [[ $((RANDOM%2)) -eq $ZERO ]]
+	then
+		echo "User Plays First"
+	else
+		echo "Computer Plays First"
+	fi
+}
+
+#CALLING FUNCTION
+whoPlaysFirst
