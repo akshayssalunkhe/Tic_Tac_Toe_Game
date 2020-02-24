@@ -15,6 +15,7 @@ ZERO=0;
 rows=0;
 columns=0;
 userSymbol=0;
+counter=1;
 
 #FUNCTION TO RESET THE GAME BOARD
 function resetGameBoard() {
@@ -57,3 +58,22 @@ function whoPlaysFirst() {
 
 #CALLING FUNCTION
 whoPlaysFirst
+
+#FUNCTION TO DISPLAY GAME BOARD
+function displayGameBoard() {
+	for((rows=1;rows<=NUMBER_OF_ROWS;rows++))
+	do
+		echo "---------------"
+		for((columns=1;columns<=NUMBER_OF_COLUMNS;columns++))
+		do
+			echo -n " $counter  |"
+			((counter++))
+		done
+		echo  ""
+	done
+	echo "---------------"
+}
+
+#CALLING FUNCTION TO DISPLAY GAME BOARD
+displayGameBoard
+
