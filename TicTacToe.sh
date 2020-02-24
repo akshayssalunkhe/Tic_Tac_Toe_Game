@@ -13,6 +13,7 @@ NUMBER_OF_COLUMNS=3;
 #VARIABLES
 rows=0;
 columns=0;
+userSymbol=0;
 
 #FUNCTION TO RESET THE GAME BOARD
 function resetGameBoard() {
@@ -28,3 +29,17 @@ function resetGameBoard() {
 #CALLING THE FUNCTION TO RESET THE BOARD
 resetGameBoard
 
+#FUNCTION TO ASSIGN SYMBOL TO USER
+function assignSymbol() {
+	if [[ $((RANDOM%2)) -eq 0 ]]
+	then
+		echo "Assigned Symbol To User Is 'O' "
+		userSymbol=O;
+	else
+		echo "Assigned Symbol To User Is 'X' "
+		userSymbol=X;
+	fi
+}
+
+#CALLING FUNCTION TO ASSIGN SYMBOL TO USER
+assignSymbol
