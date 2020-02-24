@@ -56,15 +56,15 @@ function whoPlaysFirst() {
 	fi
 }
 
-#CALLING FUNCTION
+#CALLING FUNCTION TO DECIDE WHO PLAYS
 whoPlaysFirst
 
 #FUNCTION TO DISPLAY GAME BOARD
 function displayGameBoard() {
-	for((rows=1;rows<=NUMBER_OF_ROWS;rows++))
+	for(( rows=1; rows<=NUMBER_OF_ROWS; rows++ ))
 	do
 		echo "---------------"
-		for((columns=1;columns<=NUMBER_OF_COLUMNS;columns++))
+		for(( columns=1; columns<=NUMBER_OF_COLUMNS; columns++ ))
 		do
 			echo -n " $counter  |"
 			((counter++))
