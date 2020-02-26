@@ -103,7 +103,7 @@ function isWinnerRow() {
 				else
 					echo "Computer wins"
 				fi
-			exit
+				exit
 			fi
 		done
 	done
@@ -126,7 +126,7 @@ function isWinnerColumn() {
 				else
 					echo "Computer wins"
 				fi
-			exit
+				exit
 			fi
 		done
 	done
@@ -137,7 +137,7 @@ function winnerDiagonal() {
 	if [[ ${gameBoard[1,1]} == ${gameBoard[2,2]} ]] && [[ ${gameBoard[2,2]} == ${gameBoard[3,3]} ]] && [[ ${gameBoard[1,1]} ]]
 	then
 		echo "Win Diagonal"
-		if [[ $flag -ne $zero ]]
+		if [[ $flag -eq $zero ]]
 		then
 			echo "congratulations ! Player one wins"
 		else
@@ -153,7 +153,7 @@ function winnerDiagonal() {
 		else
 			echo "Computer wins"
 		fi
-	exit
+		exit
 	fi
 }
 
@@ -182,10 +182,6 @@ function playTicTacToe() {
 				winnerDiagonal
 				((count++))
 				flag=1
-				if [[ $flagWinner -ne $zero ]]
-				then
-					echo "congratulations ! Player one wins "
-				fi
 			fi
 		#IF COMPUTER PLAY FIRST THEN WILL ENTER IN THIS CONDITION
 		elif [[ $flag == 1 ]]
