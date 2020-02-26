@@ -13,10 +13,14 @@ TOTAL_TURN=9;
 
 #VARIABLES
 rows=0;
+flag=0;
 count=0;
+input=0;
 columns=0;
 userSymbol=0;
 rowPosition=0;
+playerOneSymbol=O;
+computerSymbol=X;
 columnPosition=0;
 
 #FUNCTION TO RESET THE GAME BOARD
@@ -35,15 +39,15 @@ resetGameBoard
 
 #FUNCTION TO ASSIGN SYMBOL TO USER
 function assignSymbol() {
-	if [[ $((RANDOM%2)) -eq 0 ]]
+	if [[ $((RANDOM%2)) -eq $ZERO ]]
 	then
 		echo "Assigned Symbol To Player One Is 'O' "
 		playerOneSymbol=O;
-		playerTwoSymbol=X;
+		computerSymbol=X;
 	else
 		echo "Assigned Symbol To Player One Is 'X' "
 		playerOneSymbol=X;
-		playerTwoSymbol=O;
+		computerSymbol=O;
 	fi
 }
 
@@ -54,9 +58,11 @@ assignSymbol
 function whoPlaysFirst() {
 	if [[ $((RANDOM%2)) -eq $ZERO ]]
 	then
+		flag=0;
 		echo "Player One Plays First"
 	else
-		echo "Player Two Plays First"
+		flag=1;
+		echo "Computer Plays First"
 	fi
 }
 
@@ -88,10 +94,16 @@ function isWinnerRow() {
 		do
 			if [[ ${gameBoard[$rows,$columns]} == ${gameBoard[$rows,$(($columns+1))]} ]] &&
 				[[ ${gameBoard[$rows,$(($columns+1))]} == ${gameBoard[$rows,$(($columns+2))]} ]] &&
-				[[ ${gameBoard[$rows,$columns]}  ]]
+				[[ ${gameBoard[$rows,$columns]} && ${gameBoard[$rows,$(($columns+2))]} ]]
 			then
 				echo  "WinRows"
-				exit
+				if [[ $flag -eq $zero ]]
+				then
+					echo "congratulations ! Player one wins "
+				else
+					echo "Computer wins"
+				fi
+			exit
 			fi
 		done
 	done
@@ -105,10 +117,16 @@ function isWinnerColumn() {
 		do
 			if [[ ${gameBoard[$rows,$columns]} == ${gameBoard[$(($rows+1)),$columns]} ]] &&
 				[[ ${gameBoard[$(($rows+1)),$columns]} == ${gameBoard[$(($rows+2)),$columns]} ]] &&
-				[[ ${gameBoard[$rows,$columns]} ]]
+				[[ ${gameBoard[$rows,$columns]} && ${gameBoard[$(($rows+2)),$columns]} ]]
 			then
 				echo  "Wincolumns"
-				exit
+				if [[ $flag -eq $zero ]]
+				then
+					echo "congratulations ! Player one wins "
+				else
+					echo "Computer wins"
+				fi
+			exit
 			fi
 		done
 	done
@@ -119,42 +137,80 @@ function winnerDiagonal() {
 	if [[ ${gameBoard[1,1]} == ${gameBoard[2,2]} ]] && [[ ${gameBoard[2,2]} == ${gameBoard[3,3]} ]] && [[ ${gameBoard[1,1]} ]]
 	then
 		echo "Win Diagonal"
-		exit
+		if [[ $flag -ne $zero ]]
+		then
+			echo "congratulations ! Player one wins"
+		else
+			echo "Computer wins"
+		fi
+	exit
 	elif [[ ${gameBoard[1,3]} == ${gameBoard[2,2]} ]] && [[ ${gameBoard[2,2]} == ${gameBoard[3,1]} ]] && [[ ${gameBoard[1,3]} ]]
 	then
-		echo  "Win Diagonal"
-		exit
+		echo  "Win Diagonal 2"
+ 		if [[ $flag -eq $zero ]]
+		then
+			echo "congratulations ! Player one wins"
+		else
+			echo "Computer wins"
+		fi
+	exit
 	fi
 }
 
 #CALLING FUNCTION ASSIGN SYMBOL
 assignSymbol
 
+#FUNCTION TO PLAY THE TIC TOK TOE GAME
 function playTicTacToe() {
-	for (( input=1; input<=$TOTAL_TURN; input++ ))
+	#LOOP WILL TERMINATE AFTER TOTAL NUMBER OF TURNS OVER
+	while [[ $count -lt $TOTAL_TURN ]]
 	do
-		if [[ $count -eq $ZERO ]]
+		#IF PLAYER PLAYS FIRST THEN WILL ENTER IN THIS CONDITION
+		if [[ $flag == 0 ]]
 		then
-			read -p "Player One Turn Enter The Row Position And Column Position Respectively " rowPosition columnPosition
-			gameBoard[$rowPosition,$columnPosition]=$playerOneSymbol
-			((count++))
-			displayGameBoard
-			isWinnerRow
-			isWinnerColumn
-			winnerDiagonal
-		else
-			read -p "Player Two Turn Enter The Row Position And Column Position Respectively " rowPosition columnPosition
-			gameBoard[$rowPosition,$columnPosition]=$playerTwoSymbol
-			displayGameBoard
-			isWinnerRow
-			isWinnerColumn
-			winnerDiagonal
-			count=0;
-		fi
-		if [[ $input == $TOTAL_TURN ]]
+			echo "Player Play"
+			read -p "Enter Row position And Column Position " rowPosition columnPosition
+			if [[ $rowPosition -gt $SIZE && $columnPosition -gt $SIZE ]]
+			then
+				echo "Invalid Input"
+			elif [[ ${gameBoard[$rowPosition,$columnPosition]} != $playerOneSymbol && ${gameBoard[$rowPosition,$columnPosition]} != $computerSymbol ]]
+			then
+				gameBoard[$rowPosition,$columnPosition]=$playerOneSymbol
+				displayGameBoard
+				isWinnerRow
+				isWinnerColumn
+				winnerDiagonal
+				((count++))
+				flag=1
+				if [[ $flagWinner -ne $zero ]]
+				then
+					echo "congratulations ! Player one wins "
+				fi
+			fi
+		#IF COMPUTER PLAY FIRST THEN WILL ENTER IN THIS CONDITION
+		elif [[ $flag == 1 ]]
 		then
-			echo "It's Tie"
+			echo "Computer Play"
+			rowPosition=$(( RANDOM%3+1 ))
+			columnPosition=$(( RANDOM%3+1 ))
+			#CHECKING WHETHER GENERATED CELL POSITION IS OCCUPIED OR NOT
+			if [[ ${gameBoard[$rowPosition,$columnPosition]} != $playerOneSymbol && ${gameBoard[$rowPosition,$columnPosition]} != $computerSymbol ]]
+			then
+				gameBoard[$rowPosition,$columnPosition]=$computerSymbol
+				displayGameBoard
+				isWinnerRow
+				isWinnerColumn
+				winnerDiagonal
+				flag=0
+				((count++))
+			fi
 		fi
 	done
+	if [[ $count -eq $TOTAL_TURN ]]
+	then
+		echo "It's Tie"
+	fi
 }
+
+#CALLING FUNCTION TO PLAY GAME
 playTicTacToe
