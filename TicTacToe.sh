@@ -14,7 +14,7 @@ TOTAL_TURN=9;
 #VARIABLES
 rows=0;
 flag=0;
-count=0;
+turnCount=0;
 input=0;
 columns=0;
 userSymbol=0;
@@ -29,7 +29,7 @@ flagTwo=0;
 function resetGameBoard() {
 	for (( rows=1; rows<=$SIZE; rows++ ))
 	do
-		for(( columns=1; columns<=$SIZE; columns++ ))
+		for (( columns=1; columns<=$SIZE; columns++ ))
 		do
 			gameBord[$rows,$columns]=""
 		done
@@ -156,27 +156,29 @@ function winnerDiagonal() {
 }
 
 function checkWinMove() {
-local rows=1
-local columns=1
+	local rows=1
+	local columns=1
+	local symbol=$1
+
 	for (( rows=1; rows<=$SIZE; rows++ ))
 	do
 			#CHECKIMG ROW WINNING CONDITION
 		if [[ ${gameBoard[$rows,$columns]} == ${gameBoard[$rows,$(($columns+1))]} ]] &&
-			[[ ${gameBoard[$rows,$columns]} != $isempty ]] && [[ ${gameBoard[$rows,$columns]} == $computerSymbol ]] &&
+			[[ ${gameBoard[$rows,$columns]} != $isempty ]] && [[ ${gameBoard[$rows,$columns]} == $symbol ]] &&
 			[[ ${gameBoard[$rows,$(($columns+2))]} == $isempty ]]
 		then
 			gameBoard[$rows,$(($columns+2))]=$computerSymbol
 			((flagTwo++))
 			return;
 		elif [[ ${gameBoard[$rows,$columns]} == ${gameBoard[$rows,$(($columns+2))]} ]] &&
-			[[ ${gameBoard[$rows,$columns]} != $isempty ]] && [[ ${gameBoard[$rows,$columns]} == $computerSymbol ]] &&
+			[[ ${gameBoard[$rows,$columns]} != $isempty ]] && [[ ${gameBoard[$rows,$columns]} == $symbol ]] &&
 			[[ ${gameBoard[$rows,$(($columns+1))]} == $isempty ]]
 		then
 			gameBoard[$rows,$(($columns+1))]=$computerSymbol
 			((flagTwo++))
 			return;
 		elif [[ ${gameBoard[$rows,$(($columns+1))]} == ${gameBoard[$rows,$(($columns+2))]} ]] &&
-			 [[ ${gameBoard[$rows,$(($columns+1))]} != $isempty ]] && [[ ${gameBoard[$rows,$(($columns+1))]} == $computerSymbol ]] &&
+			 [[ ${gameBoard[$rows,$(($columns+1))]} != $isempty ]] && [[ ${gameBoard[$rows,$(($columns+1))]} == $symbol ]] &&
 			 [[ ${gameBoard[$rows,$columns]} == $isempty ]]
 		then
 			gameBoard[$rows,$columns]=$computerSymbol
@@ -192,21 +194,21 @@ local columns=1
 	for (( columns=1; columns<=$SIZE; columns++ ))
 	do
 		if [[ ${gameBoard[$rows,$columns]} == ${gameBoard[$(($rows+1)),$columns]} ]] &&
-			[[ ${gameBoard[$rows,$columns]} != $isempty ]] && [[ ${gameBoard[$rows,$columns]} == $computerSymbol ]] &&
+			[[ ${gameBoard[$rows,$columns]} != $isempty ]] && [[ ${gameBoard[$rows,$columns]} == $symbol ]] &&
 			[[ ${gameBoard[$(($rows+2)),$columns]} == $isempty ]]
 		then
 			gameBoard[$(($rows+2)),$columns]=$computerSymbol
 			((flagTwo++))
 			return;
 		elif [[ ${gameBoard[$rows,$columns]} == ${gameBoard[$(($rows+2)),$columns]} ]] &&
-			[[ ${gameBoard[$rows,$columns]} != $isempty ]] && [[ ${gameBoard[$rows,$columns]} == $computerSymbol ]] &&
+			[[ ${gameBoard[$rows,$columns]} != $isempty ]] && [[ ${gameBoard[$rows,$columns]} == $symbol ]] &&
 			[[ ${gameBoard[$(($rows+1)),$columns]} == $isempty ]]
 		then
 			gameBoard[$(($rows+1)),$columns]=$computerSymbol
 			((flagTwo++))
 			return;
 		elif [[ ${gameBoard[$(($rows+1)),$columns]} == ${gameBoard[$(($rows+2)),$columns]} ]] &&
-			[[ ${gameBoard[$(($rows+1)),$columns]} != $isempty ]] && [[ ${gameBoard[$(($rows+1)),$columns]} == $computerSymbol ]] &&
+			[[ ${gameBoard[$(($rows+1)),$columns]} != $isempty ]] && [[ ${gameBoard[$(($rows+1)),$columns]} == $symbol ]] &&
 			[[ ${gameBoard[$rows,$columns]} == $isempty ]]
 		then
 			gameBoard[$rows,$columns]=$computerSymbol
@@ -214,6 +216,7 @@ local columns=1
 			return;
 		fi
 	done
+
 	#REINITIALIZING THE ROW AND COLUMN
 	rows=1;
 	columns=1;
@@ -221,42 +224,42 @@ local columns=1
 	for (( columns=1; columns<=$SIZE; columns++ ))
 	do
 		if [[ ${gameBoard[$rows,$columns]} == ${gameBoard[$(($rows+1)),$(($columns+1))]} ]] &&
-			[[ ${gameBoard[$rows,$columns]} != $isempty ]] && [[ ${gameBoard[$rows,$columns]} == $computerSymbol ]] &&
+			[[ ${gameBoard[$rows,$columns]} != $isempty ]] && [[ ${gameBoard[$rows,$columns]} == $symbol ]] &&
 			[[ ${gameBoard[$(($rows+2)),$(($columns+2))]} == $isempty ]]
 		then
 			gameBoard[$(($rows+2)),$(($columns+2))]=$computerSymbol
 			((flagTwo++))
 			return;
 		elif [[ ${gameBoard[$rows,$columns]} == ${gameBoard[$(($rows+2)),$(($columns+2))]} ]] &&
-			[[ ${gameBoard[$rows,$columns]} != $isempty ]] && [[ ${gameBoard[$rows,$columns]} == $computerSymbol ]] &&
+			[[ ${gameBoard[$rows,$columns]} != $isempty ]] && [[ ${gameBoard[$rows,$columns]} == $symbol ]] &&
 			[[ ${gameBoard[$(($rows+1)),$(($columns+1))]} == $isempty ]]
 		then
 			gameBoard[$(($rows+1)),$(($columns+1))]=$computerSymbol
 			((flagTwo++))
 			return;
 		elif [[ ${gameBoard[$(($rows+1)),$(($columns+1))]} == ${gameBoard[$(($rows+2)),$(($columns+2))]} ]] &&
-			[[ ${gameBoard[$(($rows+1)),$(($columns+1))]} != $isempty ]] && [[ ${gameBoard[$(($rows+1)),$(($columns+1))]} == $computerSymbol ]] &&
+			[[ ${gameBoard[$(($rows+1)),$(($columns+1))]} != $isempty ]] && [[ ${gameBoard[$(($rows+1)),$(($columns+1))]} == $symbol ]] &&
 			[[ ${gameBoard[$rows,$columns]} == $isempty ]]
 		then
 			gameBoard[$rows,$columns]=$computerSymbol
 			((flagTwo++))
 			return;
 		elif [[ ${gameBoard[$rows,$(($columns+2))]} == ${gameBoard[$(($rows+1)),$(($columns+1))]} ]] &&
-			[[ ${gameBoard[$rows,$(($columns+2))]} != $isempty ]]  && [[ ${gameBoard[$rows,$(($columns+2))]} == $computerSymbol ]] &&
+			[[ ${gameBoard[$rows,$(($columns+2))]} != $isempty ]]  && [[ ${gameBoard[$rows,$(($columns+2))]} == $symbol ]] &&
 			[[ ${gameBoard[$(($rows+2)),$columns]} == $isempty ]]
 		then
 			gameBoard[$(($rows+2)),$columns]=$computerSymbol
 			((flagTwo++))
 			return;
 		elif [[ ${gameBoard[$rows,$(($columns+2))]} == ${gameBoard[$(($rows+2)),$columns]} ]] &&
-			[[ ${gameBoard[$rows,$(($columns+2))]} != $isempty ]] && [[ ${gameBoard[$rows,$(($columns+2))]} == $computerSymbol ]] &&
+			[[ ${gameBoard[$rows,$(($columns+2))]} != $isempty ]] && [[ ${gameBoard[$rows,$(($columns+2))]} == $symbol ]] &&
 			[[ ${gameBoard[$(($rows+1)),$(($columns+1))]} == $isempty ]]
 		then
 			gameBoard[$(($rows+1)),$(($columns+1))]=$computerSymbol
 			((flagTwo++))
 			return;
 		elif [[ ${gameBoard[$(($rows+1)),$(($columns+1))]} == ${gameBoard[$(($rows+2)),$columns]} ]] &&
-			[[ ${gameBoard[$(($rows+1)),$(($columns+1))]} != $isempty ]] && [[ ${gameBoard[$(($rows+1)),$(($columns+1))]} == $computerSymbol ]] &&
+			[[ ${gameBoard[$(($rows+1)),$(($columns+1))]} != $isempty ]] && [[ ${gameBoard[$(($rows+1)),$(($columns+1))]} == $symbol ]] &&
 			[[ ${gameBoard[$rows,$(($columns+2))]} == $isempty ]]
 		then
 			gameBoard[$rows,$(($columns+2))]=$computerSymbol
@@ -272,7 +275,7 @@ assignSymbol
 #FUNCTION TO PLAY THE TIC TOK TOE GAME
 function playTicTacToe() {
 	#LOOP WILL TERMINATE AFTER TOTAL NUMBER OF TURNS OVER
-	while [[ $count -lt $TOTAL_TURN ]]
+	while [[ $turnCount -lt $TOTAL_TURN ]]
 	do
 		#IF PLAYER PLAYS FIRST THEN WILL ENTER IN THIS CONDITION
 		if [[ $flag == 0 ]]
@@ -289,15 +292,20 @@ function playTicTacToe() {
 				isWinnerRow
 				isWinnerColumn
 				winnerDiagonal
-				((count++))
+				((turnCount++))
 				flag=1
 			fi
 		#IF COMPUTER PLAY FIRST THEN WILL ENTER IN THIS CONDITION
 		elif [[ $flag == 1 ]]
 		then
 			flagTwo=0;
+			((turnCount++))
 			echo "Computer Play"
 			checkWinMove
+			if [[ $flagTwo -eq $ZERO ]]
+			then
+				checkWinMove $playerOneSymbol
+			fi
 			if [[ $flagTwo -eq $ZERO ]]
 			then
 				rowPosition=$(( RANDOM%3+1 ))
@@ -306,17 +314,16 @@ function playTicTacToe() {
 				if [[ ${gameBoard[$rowPosition,$columnPosition]} != $playerOneSymbol && ${gameBoard[$rowPosition,$columnPosition]} != $computerSymbol ]]
 				then
 					gameBoard[$rowPosition,$columnPosition]=$computerSymbol
-					flag=0
-					((count++))
 				fi
 			fi
 			displayGameBoard
 			isWinnerRow
 			isWinnerColumn
 			winnerDiagonal
+			flag=0;
 		fi
 	done
-	if [[ $count -eq $TOTAL_TURN ]]
+	if [[ $turnCount -eq $TOTAL_TURN ]]
 	then
 		echo "It's Tie"
 	fi
