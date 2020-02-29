@@ -162,6 +162,7 @@ function winnerDiagonal() {
 	fi
 }
 
+#FUNCTION TO CHECK WINNING MOVE
 function checkWinMove() {
 	local rows=1
 	local columns=1
