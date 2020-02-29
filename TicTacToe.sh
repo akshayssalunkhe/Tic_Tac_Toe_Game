@@ -90,8 +90,9 @@ displayGameBoard
 
 #FUNCTION TO GENERATE ROW AND COLUMN POSITIONS
 function rowColumnPosition() {
-	rows=$(( RANDOM%3+1 ));
-	columns=$(( RANDOM%3+1 ));
+	local value
+	value=$(( RANDOM%3+1 ));
+	echo $value
 }
 
 #FUNCTION TO CHECK WINNING ROW
@@ -278,17 +279,35 @@ function checkCorners() {
 	local countCorner=0;
 	local totalCorner=4;
 	local symbol=$1
+	local row
+	local column
 	while [[ $countCorner -lt $totalCorner ]]
 	do
-		rowColumnPosition
-		if [[ $rows == 1 || $rows == 3 ]] && [[ $columns == 1 || $columns == 3 ]] && [[ ${gameBoard[$rows,$columns]} == $isEmpty ]]
+		row=$((RANDOM%3+1))
+		column=$((RANDOM%3+1))
+		if [[ $(((($row+$column))%2)) == 0 && $column != 2 ]]
 		then
-			gameBoard[$rows,$columns]=$symbol;
-			((countCorner++));
-			((flagTwo++))
-			return;
+			((countCorner++))
+			if [[ ${gameBoard[$row,$column]} == $isEmpty ]]
+			then
+				gameBoard[$row,$column]=$symbol;
+				((flagTwo++))
+				#return
+				break
+			fi
 		fi
 	done
+}
+
+#FUNCTION TO TAKE CENTER
+function takeCenter() {
+	local row=0;
+	local column=0;
+	if [[ ${gameBoard[$(($row+2)),$(($column+2))]} == $isEmpty ]]
+	then
+		gameBoard[$(($row+2)),$(($column+2))]=$computerSymbol;
+		((flagTwo++));
+	fi
 }
 
 #CALLING FUNCTION ASSIGN SYMBOL
@@ -323,7 +342,7 @@ function playTicTacToe() {
 			flagTwo=0;
 			((turnCount++))
 			echo "Computer Play"
-			checkWinMove
+			checkWinMove $computerSymbol
 			if [[ $flagTwo -eq $ZERO ]]
 			then
 				checkWinMove $playerOneSymbol
@@ -333,13 +352,20 @@ function playTicTacToe() {
 				checkCorners $computerSymbol
 			fi
 			if [[ $flagTwo -eq $ZERO ]]
+         then
+            takeCenter
+         fi
+			if [[ $flagTwo -eq $ZERO ]]
 			then
-				rowColumnPosition
+				rowPosition="$(rowColumnPosition)"
+				columnPosition="$(rowColumnPosition)"
 				#CHECKING WHETHER GENERATED CELL POSITION IS OCCUPIED OR NOT
-				if [[ ${gameBoard[$rowPosition,$columnPosition]} != $playerOneSymbol && ${gameBoard[$rowPosition,$columnPosition]} != $computerSymbol ]]
-				then
-					gameBoard[$rowPosition,$columnPosition]=$computerSymbol
-				fi
+				while [[ ${gameBoard[$rowPosition,$columnPosition]} != $isEmpty ]]
+				do
+					rowPosition="$(rowColumnPosition)"
+					columnPosition="$(rowColumnPosition)"
+				done
+				gameBoard[$rowPosition,$columnPosition]=$computerSymbol
 			fi
 			displayGameBoard
 			isWinnerRow
