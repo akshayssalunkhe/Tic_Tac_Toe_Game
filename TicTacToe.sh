@@ -353,9 +353,9 @@ function playTicTacToe() {
 				checkCorners $computerSymbol
 			fi
 			if [[ $flagTwo -eq $ZERO ]]
-         then
-            takeCenter
-         fi
+			then
+				takeCenter
+			fi
 			if [[ $flagTwo -eq $ZERO ]]
 			then
 				rowPosition="$(rowColumnPosition)"
