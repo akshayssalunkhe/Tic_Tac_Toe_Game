@@ -170,7 +170,7 @@ function checkWinMove() {
 
 	for (( rows=1; rows<=$SIZE; rows++ ))
 	do
-			#CHECKIMG ROW WINNING CONDITION
+		#CHECKIMG ROW WINNING CONDITION
 		if [[ ${gameBoard[$rows,$columns]} == ${gameBoard[$rows,$(($columns+1))]} ]] &&
 			[[ ${gameBoard[$rows,$columns]} != $isEmpty ]] && [[ ${gameBoard[$rows,$columns]} == $symbol ]] &&
 			[[ ${gameBoard[$rows,$(($columns+2))]} == $isEmpty ]]
@@ -293,7 +293,6 @@ function checkCorners() {
 			then
 				gameBoard[$row,$column]=$symbol;
 				((flagTwo++))
-				#return
 				break
 			fi
 		fi
